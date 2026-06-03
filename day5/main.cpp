@@ -122,13 +122,6 @@ class Blockmanager{
 
     }
 
-
-
-
-
-
-
-
 };
 
 int main(){
