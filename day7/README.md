@@ -45,7 +45,7 @@ buf1 释放自己的内存
 buf2 释放自己的内存
 
 
-3. 什么是拷贝构造函数
+3. 什么是拷贝构造函数  构造函数都不需要返回值
 SimpleBuffer buf1(100);
 SimpleBuffer buf2 = buf1;
 
@@ -134,9 +134,22 @@ SimpleBuffer buf2 = move(buf1);
 SimpleBuffer(SimpleBuffer&& other)
 
 注意这里是：
+ /* SimpleBuffer temp(100),里面有：100MB数据
+                现在：
+                SimpleBuffer buf = temp;
 
-&&
-叫右值引用，你现在可以先理解成：
+                普通拷贝：申请100MB 复制100MB 很慢。
+
+                 但如果：
+
+                SimpleBuffer buf = std::move(temp);
+                别复制了
+
+               直接把temp的资源给buf
+                /*
+
+
+&& 叫右值引用，你现在可以先理解成：
 
 这个 other 是一个准备被“搬走资源”的对象。
 
