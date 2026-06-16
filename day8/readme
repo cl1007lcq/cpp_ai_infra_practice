@@ -1,0 +1,91 @@
+1. 为什么不能一直写一个 main.cpp？
+
+前几天你可能一直这样写：
+
+main.cpp 里包含：
+- struct Block
+- class BlockManager
+- allocate_block
+- release_block
+- main()
+
+小练习可以这样。
+
+但真实项目如果所有东西都写在一个文件里，会出现几个问题：
+
+1. 文件越来越长，很难读
+2. 类和测试代码混在一起
+3. 不方便复用
+4. 不方便多人协作
+5. 修改一个地方可能要重新编译很多内容
+
+所以 C++ 工程通常拆成：
+
+.h    ：声明
+.cpp  ：实现
+main.cpp：使用这些类和函数
+
+
+2.h 文件是什么？
+
+.h 文件叫头文件。
+
+它主要放：
+
+1. struct 声明
+2. class 声明
+3. 函数声明
+4. 成员变量和成员函数接口
+
+比如你可以有一个：
+
+Block.h
+
+里面放：
+
+#ifndef BLOCK_H
+#define BLOCK_H
+
+struct Block {
+    int id;
+    bool is_used;
+    int token_count;
+};
+
+#endif
+
+这表示：
+
+我定义了一个 Block 数据结构，别的文件可以 include 它来使用。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,3 @@
+D:/cpp_ai_infra_practice/day8/build/CMakeFiles/BlockManagerTest.dir
+D:/cpp_ai_infra_practice/day8/build/CMakeFiles/edit_cache.dir
+D:/cpp_ai_infra_practice/day8/build/CMakeFiles/rebuild_cache.dir

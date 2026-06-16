@@ -1,0 +1,4 @@
+# ninja log v6
+2	775	8033335065929229	CMakeFiles/BlockManagerTest.dir/main.cpp.obj	3cf799d475a4ded3
+9	965	8033335065998948	CMakeFiles/BlockManagerTest.dir/src/BlockManager.cpp.obj	3582e85cbe703951
+965	1090	8033335075560925	BlockManagerTest.exe	4c2bbb2d2623fe68
