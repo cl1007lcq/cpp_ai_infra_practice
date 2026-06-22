@@ -10,3 +10,6 @@
 760	894	8036766460268017	BlockManagerTest.exe	4c2bbb2d2623fe68
 4	821	8036767146685302	CMakeFiles/BlockManagerTest.dir/main.cpp.obj	3cf799d475a4ded3
 823	948	8036767154868257	BlockManagerTest.exe	4c2bbb2d2623fe68
+4	810	8038520460897187	CMakeFiles/BlockManagerTest.dir/main.cpp.obj	3cf799d475a4ded3
+47	1028	8038520461350832	CMakeFiles/BlockManagerTest.dir/src/BlockManager.cpp.obj	3582e85cbe703951
+1028	1163	8038520471163298	BlockManagerTest.exe	4c2bbb2d2623fe68

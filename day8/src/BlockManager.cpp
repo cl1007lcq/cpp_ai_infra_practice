@@ -16,29 +16,42 @@ BlockManager::BlockManager(int num_blocks) {
 }
 
 void BlockManager::allocate_block() {
-    if (!free_blocks.empty()) {
-        int block_id = free_blocks.front();
-        free_blocks.pop();
-
-        cout << "allocating id number is " << block_id << endl;
-        blocks[block_id]->is_used = true;
-        blocks[block_id]->token_count = 128;
-    } else {
-        cout << "no free space" << endl;
+    if (free_blocks.empty()) {
+        cout << "No free block available." << endl;
+        return;
     }
+
+    int block_id = free_blocks.front();
+    free_blocks.pop();
+
+    blocks[block_id]->is_used = true;
+    blocks[block_id]->token_count = 128;
+
+    cout << "Block " << block_id << " allocated successfully." << endl;
 }
 
+
+//如果没找到这个 block_id” 可以把它理解成一种“查找失败标记”。
 void BlockManager::release_block(int block_id) {
-    if (blocks.find(block_id) != blocks.end() && blocks[block_id]->is_used) {
-        blocks[block_id]->is_used = false;
-        blocks[block_id]->token_count = 0;
-        free_blocks.push(block_id);
+    auto it = blocks.find(block_id);
 
-        cout << "Block " << block_id << " released and added back to free blocks." << endl;
-    } else {
-        cout << "Block " << block_id << " cannot be released." << endl;
+    if (it == blocks.end()) {
+        cout << "Block " << block_id << " does not exist." << endl;
+        return;
     }
+
+    if (!it->second->is_used) { // ！的优先级最低
+        cout << "Block " << block_id << " is already free." << endl;
+        return;
+    }
+
+    it->second->is_used = false;
+    it->second->token_count = 0;
+    free_blocks.push(block_id);
+
+    cout << "Block " << block_id << " released successfully." << endl;
 }
+
 
 void BlockManager::print_status() {
     for (const auto& pair : blocks) {
