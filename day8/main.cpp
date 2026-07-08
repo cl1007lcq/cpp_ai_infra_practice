@@ -6,44 +6,40 @@ using namespace std;
 int main(){
      /*    cmake --build build  改完代码用这个重新建构
      .\build\BlockManagerTest.exe    */
-    BlockManager manager(5);
 
-    cout <<  "Before allocation" << endl;
+    BlockManager manager(3);
+
+    manager.allocate_blocks_for_request(1001, 1);
+
+    manager.append_token(1001);
+    manager.append_token(1001);
+    manager.append_token(1001);
+    manager.append_token(1001);
+    manager.append_token(1001);
+
+
+    cout << "After request 1001 append 5 times:" << endl;
+    manager.print_request_number();
+    manager.print_request_detail(1001);
+    cout << "Total blocks: " << manager.total_block_count() << endl;
     manager.print_status();
-    cout << "Free block count " << manager.free_block_count()<<endl;
 
-    manager.allocate_blocks_for_request(100, 3);
+    manager.free_for_request(1001);
 
-    cout << "\nAfter allocate request 100:" << endl;
+    cout << "\nAfter free request 1001:" << endl;
+    manager.print_request_number();
     manager.print_status();
-    manager.print_request_status();
-    cout << "Free block count: " << manager.free_block_count() << endl;
 
-    manager.free_for_request(100);
+    manager.allocate_blocks_for_request(1002, 1);
+    manager.append_token(1002);
 
-    cout << "\nAfter free request 100:" << endl;
+    cout << "\nAfter request 1002 allocate and append:" << endl;
+    manager.print_request_number();
+    manager.print_request_detail(1002);
     manager.print_status();
-    manager.print_request_status();
-    cout << "Free block count: " << manager.free_block_count() << endl;
 
     return 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-return 0;
 
 }
 

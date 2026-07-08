@@ -15,6 +15,8 @@ class BlockManager {
     std::unordered_map<int, std::vector<int>> request_to_blocks;
 
     public:
+    static const int BLOCK_CAPACITY = 4;
+
     BlockManager(int num_blocks);
 
     void allocate_block();
@@ -31,7 +33,15 @@ class BlockManager {
 
     void free_for_request(int request_id);
 
-    void print_request_status();
+    void print_request_number();
+
+    int acquire_free_block();
+
+    bool append_token(int request_id);
+
+    void print_request_detail(int request_id);
+
+    
 
 
 };

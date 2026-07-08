@@ -26,7 +26,7 @@ void BlockManager::allocate_block() {
     free_blocks.pop();
 
     blocks[block_id]->is_used = true;
-    blocks[block_id]->token_count = 128;
+    blocks[block_id]->token_count = 0;
 
     cout << "Block " << block_id << " allocated successfully." << endl;
 }
@@ -78,7 +78,7 @@ request_to_blocks.end()
 也就是“尾后迭代器”，可以理解成一个“没找到标记”。
 */
 void BlockManager::allocate_blocks_for_request(int request_id, int num_blocks){
-    //要插入的时候 不等于说明 找到了 已经存在了 request id存在了
+    //去 map 里找这个 key，找到就给你一个指向它的迭代器；找不到就给你 end()。”
     if (request_to_blocks.find(request_id) != request_to_blocks.end()) {
         cout << "Request already exists" << endl;
         return;
@@ -97,7 +97,7 @@ void BlockManager::allocate_blocks_for_request(int request_id, int num_blocks){
         free_blocks.pop();
 
         blocks[block_id]->is_used = true;
-        blocks[block_id]->token_count = 128;
+        blocks[block_id]->token_count = 0;
         // 每一次都把修改的block，插进存储block的 unordered_map blocks中
         allocated_blocks.push_back(block_id);
 
@@ -141,7 +141,7 @@ item = {1001, {0, 1, 2}}
 其中：
 item.first 是 key，也就是 request_id
 item.second 是 value，也就是 vector<int>*/
-void BlockManager::print_request_status() {
+void BlockManager::print_request_number() {
     if (request_to_blocks.empty()) {
         cout << "No active requests" << endl;
         return;
@@ -157,6 +157,118 @@ void BlockManager::print_request_status() {
         cout << endl;
     }
 }
+
+
+int BlockManager::acquire_free_block() {
+    if(free_blocks.empty()){
+        cout <<"No free block available."<<endl;
+        return -1;
+    }
+    int block_id = free_blocks.front();
+    free_blocks.pop();
+
+    blocks[block_id]->is_used = true;
+    blocks[block_id]->token_count = 0;
+
+    return block_id;
+
+
+}
+//所有函数在设计的时候 应该都是可以直接调用的，判断是否成功调用或者失败 应该在调用函数内部实现
+bool BlockManager::append_token(int request_id){
+    //request_it = request_to_blocks.find(1001); 举例子，找到的是 request_it -> 1001 ----> [0,2,5]
+    auto request_it = request_to_blocks.find(request_id);
+    //Request 不存在
+    if(request_it == request_to_blocks.end()){
+        cout << "Request not found" << endl;
+        return false;
+    }
+    // Request 存在，但没有 block
+    if(request_it->second.empty()){
+        cout << "Request has no allocated blocks" << endl;
+        return false;
+    }
+    //找最后一个 block
+    int last_block_id = request_it->second.back();
+
+    //block iterator = block it ,find返回的不是 block,而是指向 map的某一项的指针 也叫迭代器，
+    //返回不了block，因为map里存的是key-value
+    auto block_it = blocks.find(last_block_id);
+    /*1. blocks[last_block_id]
+     如果 key 不存在，会尝试创建一个新元素。
+    2. blocks.find(last_block_id)
+     只是查，不会创建新元素。确实这两个都是block id 是一样的东西 但是block  统一要求用unodermap的blocks改*/
+    //拿block_it去找 block，找不到就返回 blocks.end()，也就是“尾后迭代器”，可以理解成一个“没找到标记”。
+    if(block_it == blocks.end()){
+        cout << "Block not found" << endl;
+        return false;
+    }
+    if(block_it->second == nullptr){
+        cout << "Block pointer is null" << endl;
+        return false;
+    }
+    //判断结束取block 
+    Block& block =*(block_it->second);
+    //判断最后一个block 有没有空间
+    if(block.token_count < BLOCK_CAPACITY){
+        block.token_count++;
+        cout << "Token appended to block " << block.id << endl; 
+        return true;
+    }
+
+    cout<< "not enough last block capacity, need to acquire a new block" << endl;
+    int new_block_id = acquire_free_block();
+
+    //把新token放进新block里
+    blocks[new_block_id]->token_count = 1;
+    //把新申请到的 block id，追加到当前 request 的 block 列表末尾。
+    request_it->second.push_back(new_block_id);
+
+    cout << "New block " << new_block_id
+     << " allocated for request " << request_id << endl;
+
+    return true;
+
+}
+
+void BlockManager::print_request_detail(int request_id) {
+
+    auto request_it = request_to_blocks.find(request_id);
+    // 1. 检查 request 是否存在
+    if (request_it == request_to_blocks.end()) {
+        cout << "Request not found" << endl;
+        return;
+    }
+
+    cout << "Request " << request_id << " details:" << endl;
+    // 2. 遍历该 request 的 block id
+    for (int block_id : request_it->second) {
+        auto block_it = blocks.find(block_id);
+        
+        /*如果在 blocks 这个 map 里，没有找到当前这个 block_id 对应的 block，
+        就打印一条提示，然后跳过这次循环，继续处理下一个 block。*/
+        
+        if (block_it == blocks.end()) {
+            cout << "Block " << block_id << " not found" << endl;
+            continue;
+        }
+
+        cout << "Block ID: " << block_it->second->id
+             << ", token_count: " << block_it->second->token_count
+             << ", capacity: " << BLOCK_CAPACITY
+             << endl;
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
